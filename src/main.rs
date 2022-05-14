@@ -24,8 +24,8 @@ struct Timewarp {
 
     /// Offset: A descriptive description for offset to be added to Reference Time
     /// with the following units:
-    /// <nanoseconds microseconds milliseconds seconds minutes hours days weeks months years>
-    /// ie: "15 days 20 seconds 100 milliseconds"
+    /// <y mon w d h m s ms 1µs 1ns>
+    /// ie: "15d+20s+100ms"
     #[clap(short, long)]
     offset: String,
 
