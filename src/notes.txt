@@ -1,0 +1,5 @@
+cargo run -- --d1 Hi <<EOF
+Fri May  6 03:13:06 2022
+EOF
+
+cargo run -- -r "Fri May  6 03:13:06 2022" -c "Fri May 13 03:13:06 2022" -o "5y"
