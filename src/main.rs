@@ -20,7 +20,7 @@ where
 struct Timewarp {
     /// Reference Time: This time will add with offset
     #[clap(short, long)]
-    ref_time: String,
+    ref_time: Option<String>,
 
     /// Offset: A descriptive description for offset to be added to Reference Time
     /// with the following units:
@@ -34,6 +34,7 @@ struct Timewarp {
     comp_timeorfile: Option<String>,
 
     /// Format Time: "%a %b %e %T %Y" is default.
+    /// An example of this format will accept: "Fri May 13 03:13:06 2022".
     /// See reference here: https://strftime.org/
     #[clap(short, long)]
     format: Option<String>,
@@ -62,10 +63,15 @@ fn main() {
     if timewarp.format.is_some() {
         date_format = timewarp.format.unwrap();
     }
-    // let time1 = Local.datetime_from_str(&args.d1, "%a %b %e %T %Y").unwrap();
-    let reference_time = Local
-        .datetime_from_str(&timewarp.ref_time, &date_format)
-        .unwrap();
+    let reference_time: DateTime<Local>;
+    match timewarp.ref_time {
+        Some(ref_time) => {
+            reference_time = Local.datetime_from_str(&ref_time, &date_format).unwrap();
+        }
+        None => {
+            reference_time = Local::now();
+        }
+    };
     match timewarp.comp_timeorfile {
         Some(time_or_file) => {
             if Path::new(&time_or_file).exists() {

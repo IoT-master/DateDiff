@@ -2,11 +2,12 @@ cargo run -- --d1 Hi <<EOF
 Fri May  6 03:13:06 2022
 EOF
 
-cargo run -- -r "Fri May  6 03:13:06 2022" -c "Fri May 13 03:13:06 2022" -o "5y" gt
+cargo run -- -r "Fri May  6 03:13:06 2022" -c "Fri May 13 03:13:06 2022" -o "5d" gt
 
 cargo run -- -r "Fri May  6 03:13:06 2022" -o "5y" gt <<EOF
 Fri May  6 03:13:06 2022
 Sat May  7 03:13:06 2022
 EOF
 
-cargo run -- -r "May  6 03:13:06 2022" -c "./dates.txt" -o "5y" -f"%b %e %T %Y" gt
+cargo run -- -r "May  6 03:13:06 2022" -c "./dates.txt" -o "5d" -f"%b %e %T %Y" gt
+cargo run -- -c "./dates.txt" -o "4d" -f"%b %e %T %Y" gt
