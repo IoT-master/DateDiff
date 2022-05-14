@@ -86,7 +86,7 @@ fn main() {
                                     "{}",
                                     sample_time
                                         > reference_time
-                                            + parse_chrono(timewarp.offset.clone()).unwrap()
+                                            - parse_chrono(timewarp.offset.clone()).unwrap()
                                 )
                             }
                             Comparator::Lt => {
@@ -97,7 +97,7 @@ fn main() {
                                     "{}",
                                     sample_time
                                         < reference_time
-                                            + parse_chrono(timewarp.offset.clone()).unwrap()
+                                            - parse_chrono(timewarp.offset.clone()).unwrap()
                                 )
                             }
                             Comparator::Eq => {
@@ -108,7 +108,7 @@ fn main() {
                                     "{}",
                                     sample_time
                                         == reference_time
-                                            + parse_chrono(timewarp.offset.clone()).unwrap()
+                                            - parse_chrono(timewarp.offset.clone()).unwrap()
                                 )
                             }
                             Comparator::Le => {
@@ -119,7 +119,7 @@ fn main() {
                                     "{}",
                                     sample_time
                                         <= reference_time
-                                            + parse_chrono(timewarp.offset.clone()).unwrap()
+                                            - parse_chrono(timewarp.offset.clone()).unwrap()
                                 )
                             }
                             Comparator::Ge => {
@@ -130,7 +130,7 @@ fn main() {
                                     "{}",
                                     sample_time
                                         >= reference_time
-                                            + parse_chrono(timewarp.offset.clone()).unwrap()
+                                            - parse_chrono(timewarp.offset.clone()).unwrap()
                                 )
                             }
                         }
@@ -143,23 +143,23 @@ fn main() {
                 match timewarp.command {
                     Comparator::Gt => println!(
                         "{}",
-                        sample_time > reference_time + parse_chrono(timewarp.offset).unwrap()
+                        sample_time > reference_time - parse_chrono(timewarp.offset).unwrap()
                     ),
                     Comparator::Lt => println!(
                         "{}",
-                        sample_time < reference_time + parse_chrono(timewarp.offset).unwrap()
+                        sample_time < reference_time - parse_chrono(timewarp.offset).unwrap()
                     ),
                     Comparator::Eq => println!(
                         "{}",
-                        sample_time == reference_time + parse_chrono(timewarp.offset).unwrap()
+                        sample_time == reference_time - parse_chrono(timewarp.offset).unwrap()
                     ),
                     Comparator::Le => println!(
                         "{}",
-                        sample_time <= reference_time + parse_chrono(timewarp.offset).unwrap()
+                        sample_time <= reference_time - parse_chrono(timewarp.offset).unwrap()
                     ),
                     Comparator::Ge => println!(
                         "{}",
-                        sample_time >= reference_time + parse_chrono(timewarp.offset).unwrap()
+                        sample_time >= reference_time - parse_chrono(timewarp.offset).unwrap()
                     ),
                 }
             }
@@ -176,7 +176,7 @@ fn main() {
                         println!(
                             "{}",
                             sample_time
-                                > reference_time + parse_chrono(timewarp.offset.clone()).unwrap()
+                                > reference_time - parse_chrono(timewarp.offset.clone()).unwrap()
                         )
                     }
                     Comparator::Lt => {
@@ -185,7 +185,7 @@ fn main() {
                         println!(
                             "{}",
                             sample_time
-                                < reference_time + parse_chrono(timewarp.offset.clone()).unwrap()
+                                < reference_time - parse_chrono(timewarp.offset.clone()).unwrap()
                         )
                     }
                     Comparator::Eq => {
@@ -194,7 +194,7 @@ fn main() {
                         println!(
                             "{}",
                             sample_time
-                                == reference_time + parse_chrono(timewarp.offset.clone()).unwrap()
+                                == reference_time - parse_chrono(timewarp.offset.clone()).unwrap()
                         )
                     }
                     Comparator::Le => {
@@ -203,7 +203,7 @@ fn main() {
                         println!(
                             "{}",
                             sample_time
-                                <= reference_time + parse_chrono(timewarp.offset.clone()).unwrap()
+                                <= reference_time - parse_chrono(timewarp.offset.clone()).unwrap()
                         )
                     }
                     Comparator::Ge => {
@@ -212,29 +212,11 @@ fn main() {
                         println!(
                             "{}",
                             sample_time
-                                >= reference_time + parse_chrono(timewarp.offset.clone()).unwrap()
+                                >= reference_time - parse_chrono(timewarp.offset.clone()).unwrap()
                         )
                     }
                 }
             }
         }
     }
-
-    // std::path::Path::new(fp).exists()
-
-    // let converted_time = Local.datetime_from_str(each, "%a %b %e %T %Y").unwrap();
-    // println!("{}", Utc::now().signed_duration_since(converted_time));
-    // println!(
-    //     "{}",
-    //     Utc::now().signed_duration_since(converted_time) + parse_chrono("3d").unwrap()
-    // );
-    // println!("{}", Duration::days(3));
-    // println!("{}", Utc::now());
-    // println!("{}", Local::now());
-    // println!(
-    //     "{}",
-    //     FixedOffset::east(9 * 3600).ymd(2014, 11, 28) // .and_hms_nano(21, 45, 59, 324310806)
-    // );
-    // println!("{}:{}", local.hour(), local.minute());
-    // println!("{}", local.time().format("%H:%M:%S"));
 }
