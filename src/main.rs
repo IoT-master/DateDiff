@@ -3,7 +3,17 @@ use chrono::prelude::*;
 use clap::Parser;
 use clap::Subcommand;
 use duration_str::parse_chrono;
-// use std::io::{self, Read};
+use std::fs::File;
+use std::io::{self, BufRead, Read};
+use std::path::Path;
+
+fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
+where
+    P: AsRef<Path>,
+{
+    let file = File::open(filename)?;
+    Ok(io::BufReader::new(file).lines())
+}
 
 #[derive(Parser, Debug)]
 #[clap(author="Senh Mo Chuang senhmo.chuang@amd.com", version="0.0.1", about="Time Differ CLI", long_about = None)]
@@ -21,7 +31,7 @@ struct Timewarp {
 
     /// Comparative Time or Filename to list of Dates with the proper format: This time will be compared to Reference Time + Offset
     #[clap(short, long)]
-    comp_timeorfile: String,
+    comp_timeorfile: Option<String>,
 
     /// Format Time: "%a %b %e %T %Y" is default.
     /// See reference here: https://strftime.org/
@@ -56,45 +66,163 @@ fn main() {
     let reference_time = Local
         .datetime_from_str(&timewarp.ref_time, &date_format)
         .unwrap();
-    let sample_time = Local
-        .datetime_from_str(&timewarp.comp_timeorfile, &date_format)
-        .unwrap();
-    match timewarp.command {
-        Comparator::Gt => println!(
-            "{}",
-            sample_time > reference_time + parse_chrono(timewarp.offset).unwrap()
-        ),
-        Comparator::Lt => println!(
-            "{}",
-            sample_time < reference_time + parse_chrono(timewarp.offset).unwrap()
-        ),
-        Comparator::Eq => println!(
-            "{}",
-            sample_time == reference_time + parse_chrono(timewarp.offset).unwrap()
-        ),
-        Comparator::Le => println!(
-            "{}",
-            sample_time <= reference_time + parse_chrono(timewarp.offset).unwrap()
-        ),
-        Comparator::Ge => println!(
-            "{}",
-            sample_time >= reference_time + parse_chrono(timewarp.offset).unwrap()
-        ),
+    match timewarp.comp_timeorfile {
+        Some(time_or_file) => {
+            if Path::new(&time_or_file).exists() {
+                if let Ok(lines) = read_lines(&time_or_file) {
+                    for datetimerow in lines {
+                        match timewarp.command {
+                            Comparator::Gt => {
+                                let sample_time = Local
+                                    .datetime_from_str(&datetimerow.unwrap(), &date_format)
+                                    .unwrap();
+                                println!(
+                                    "{}",
+                                    sample_time
+                                        > reference_time
+                                            + parse_chrono(timewarp.offset.clone()).unwrap()
+                                )
+                            }
+                            Comparator::Lt => {
+                                let sample_time = Local
+                                    .datetime_from_str(&datetimerow.unwrap(), &date_format)
+                                    .unwrap();
+                                println!(
+                                    "{}",
+                                    sample_time
+                                        < reference_time
+                                            + parse_chrono(timewarp.offset.clone()).unwrap()
+                                )
+                            }
+                            Comparator::Eq => {
+                                let sample_time = Local
+                                    .datetime_from_str(&datetimerow.unwrap(), &date_format)
+                                    .unwrap();
+                                println!(
+                                    "{}",
+                                    sample_time
+                                        == reference_time
+                                            + parse_chrono(timewarp.offset.clone()).unwrap()
+                                )
+                            }
+                            Comparator::Le => {
+                                let sample_time = Local
+                                    .datetime_from_str(&datetimerow.unwrap(), &date_format)
+                                    .unwrap();
+                                println!(
+                                    "{}",
+                                    sample_time
+                                        <= reference_time
+                                            + parse_chrono(timewarp.offset.clone()).unwrap()
+                                )
+                            }
+                            Comparator::Ge => {
+                                let sample_time = Local
+                                    .datetime_from_str(&datetimerow.unwrap(), &date_format)
+                                    .unwrap();
+                                println!(
+                                    "{}",
+                                    sample_time
+                                        >= reference_time
+                                            + parse_chrono(timewarp.offset.clone()).unwrap()
+                                )
+                            }
+                        }
+                    }
+                }
+            } else {
+                let sample_time = Local
+                    .datetime_from_str(&time_or_file, &date_format)
+                    .unwrap();
+                match timewarp.command {
+                    Comparator::Gt => println!(
+                        "{}",
+                        sample_time > reference_time + parse_chrono(timewarp.offset).unwrap()
+                    ),
+                    Comparator::Lt => println!(
+                        "{}",
+                        sample_time < reference_time + parse_chrono(timewarp.offset).unwrap()
+                    ),
+                    Comparator::Eq => println!(
+                        "{}",
+                        sample_time == reference_time + parse_chrono(timewarp.offset).unwrap()
+                    ),
+                    Comparator::Le => println!(
+                        "{}",
+                        sample_time <= reference_time + parse_chrono(timewarp.offset).unwrap()
+                    ),
+                    Comparator::Ge => println!(
+                        "{}",
+                        sample_time >= reference_time + parse_chrono(timewarp.offset).unwrap()
+                    ),
+                }
+            }
+        }
+        None => {
+            let mut buffer = String::new();
+            let standard_input = io::stdin();
+            standard_input.lock().read_to_string(&mut buffer).unwrap();
+            for datetimerow in buffer.trim().split("\n") {
+                match timewarp.command {
+                    Comparator::Gt => {
+                        let sample_time =
+                            Local.datetime_from_str(&datetimerow, &date_format).unwrap();
+                        println!(
+                            "{}",
+                            sample_time
+                                > reference_time + parse_chrono(timewarp.offset.clone()).unwrap()
+                        )
+                    }
+                    Comparator::Lt => {
+                        let sample_time =
+                            Local.datetime_from_str(&datetimerow, &date_format).unwrap();
+                        println!(
+                            "{}",
+                            sample_time
+                                < reference_time + parse_chrono(timewarp.offset.clone()).unwrap()
+                        )
+                    }
+                    Comparator::Eq => {
+                        let sample_time =
+                            Local.datetime_from_str(&datetimerow, &date_format).unwrap();
+                        println!(
+                            "{}",
+                            sample_time
+                                == reference_time + parse_chrono(timewarp.offset.clone()).unwrap()
+                        )
+                    }
+                    Comparator::Le => {
+                        let sample_time =
+                            Local.datetime_from_str(&datetimerow, &date_format).unwrap();
+                        println!(
+                            "{}",
+                            sample_time
+                                <= reference_time + parse_chrono(timewarp.offset.clone()).unwrap()
+                        )
+                    }
+                    Comparator::Ge => {
+                        let sample_time =
+                            Local.datetime_from_str(&datetimerow, &date_format).unwrap();
+                        println!(
+                            "{}",
+                            sample_time
+                                >= reference_time + parse_chrono(timewarp.offset.clone()).unwrap()
+                        )
+                    }
+                }
+            }
+        }
     }
 
     // std::path::Path::new(fp).exists()
-    // let mut buffer = String::new();
-    // let standard_input = io::stdin();
-    // standard_input.lock().read_to_string(&mut buffer).unwrap();
-    // for each in buffer.trim().split("\n") {
-    //     let converted_time = Local.datetime_from_str(each, "%a %b %e %T %Y").unwrap();
-    //     println!("{}", Utc::now().signed_duration_since(converted_time));
-    //     println!(
-    //         "{}",
-    //         Utc::now().signed_duration_since(converted_time) + parse_chrono("3d").unwrap()
-    //     );
-    //     println!("{}", Duration::days(3));
-    // }
+
+    // let converted_time = Local.datetime_from_str(each, "%a %b %e %T %Y").unwrap();
+    // println!("{}", Utc::now().signed_duration_since(converted_time));
+    // println!(
+    //     "{}",
+    //     Utc::now().signed_duration_since(converted_time) + parse_chrono("3d").unwrap()
+    // );
+    // println!("{}", Duration::days(3));
     // println!("{}", Utc::now());
     // println!("{}", Local::now());
     // println!(
