@@ -35,6 +35,8 @@ struct Timewarp {
 
     /// Format Time: "%a %b %e %T %Y" is default.
     /// An example of this format will accept: "Fri May 13 03:13:06 2022".
+    /// Typical Format "%Y-%m-%d_%H:%M:%S"
+    /// will result to an example like 2022-04-28_04:20:47
     /// See reference here: https://strftime.org/
     #[clap(short, long)]
     format: Option<String>,

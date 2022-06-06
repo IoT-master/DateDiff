@@ -1,13 +1,14 @@
-cargo run -- --d1 Hi <<EOF
-Fri May  6 03:13:06 2022
+./target/release/datediff -r "Fri May  6 03:13:06 2022" -c "Fri May 13 03:13:06 2022" -o "5d" gt
+
+./target/release/datediff -c "./dates.txt" -o "4mon" -f"%b %e %T %Y" le
+./target/release/datediff -c "./dates2.txt" -o "4mon" -f"%Y_%m_%D_%H:%S" le
+./target/release/datediff -c "./dates3.txt" -o "4mon" -f "%Y-%m-%d_%H:%M:%S" le
+cargo run --  -c "./dates3.txt" -o "7d" -f "%Y-%m-%d_%H:%M:%S" le
+./target/release/datediff -c "./dates3.txt" -o "7d" -f "%Y-%m-%d_%H:%M:%S" le
+./target/release/datediff -r "May 14 03:13:06 2022" -o "1d" -f "%b %e %T %Y" gt <<EOF
+May  6 03:13:06 2022
+May  9 08:36:57 2022
+May 13 10:35:22 2022
+Feb 24 06:39:17 2022
+Apr 25 10:57:16 2018
 EOF
-
-cargo run -- -r "Fri May  6 03:13:06 2022" -c "Fri May 13 03:13:06 2022" -o "5d" gt
-
-cargo run -- -r "Fri May  6 03:13:06 2022" -o "5y" gt <<EOF
-Fri May  6 03:13:06 2022
-Sat May  7 03:13:06 2022
-EOF
-
-cargo run -- -r "May  6 03:13:06 2022" -c "./dates.txt" -o "5d" -f"%b %e %T %Y" gt
-cargo run -- -c "./dates.txt" -o "4d" -f"%b %e %T %Y" gt
